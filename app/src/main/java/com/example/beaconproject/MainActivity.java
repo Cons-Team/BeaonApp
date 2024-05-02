@@ -2,7 +2,10 @@ package com.example.beaconproject;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
@@ -10,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +29,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         metro_map =findViewById(R.id.imageView);
+
+        Button buttonOpen = (Button) findViewById(R.id.open) ;
+        buttonOpen.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer) ;
+                if (!drawer.isDrawerOpen(Gravity.LEFT)) {
+                    drawer.openDrawer(Gravity.LEFT) ;
+                }
+            }
+        });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
