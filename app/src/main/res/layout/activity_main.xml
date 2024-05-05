@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#000000"
     tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/metro_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -42,7 +44,7 @@
             android:id="@+id/searchBtn"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="#FDF6FE"
             app:layout_constraintBottom_toBottomOf="@+id/searchText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/searchText"
@@ -55,13 +57,14 @@
         android:id="@+id/menuLayout"
         android:layout_width="220dp"
         android:layout_height="600dp"
-        android:layout_marginTop="50dp"
-        android:background="@color/white"
+        android:layout_marginTop="70dp"
+        android:background="#FDF6FE"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/menuBtn"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="#6A72FF"
@@ -80,7 +83,71 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/profile_image" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:backgroundTint="#FDF6FE"
+            android:drawableLeft="@drawable/lost_property_day"
+            android:text="유실물"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+        <TextView
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:text="설정"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button" />
+
+        <Button
+            android:id="@+id/fontBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="#FDF6FE"
+            android:drawableLeft="@drawable/font_day"
+            android:text="폰트 변경"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/setting" />
+
+        <Button
+            android:id="@+id/handModeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="#FDF6FE"
+            android:drawableLeft="@drawable/left_mode_day"
+            android:text="왼손모드"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fontBtn" />
+
+        <Button
+            android:id="@+id/darkModeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="#FDF6FE"
+            android:drawableLeft="@drawable/day_mode"
+            android:text="야간모드"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/handModeBtn" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -89,11 +156,21 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="@color/white"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#FDF6FE"
         android:onClick="onClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu_image" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/navigation_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
