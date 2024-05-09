@@ -1,29 +1,43 @@
 package com.example.beaconproject;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView metro_map;
     View menu;
     ImageButton menuBtn;
-    Button searchBtn;
-    Button navigationBtn;
+    Button lostThingBtn;
+    Button fontBtn;
+    Button handModeBtn;
+    Button themeBtn;
+    ImageButton searchBtn;
+    ImageButton navigationBtn;
 
     EditText searchText;
 
-    float x, y;
-    float dx, dy;
+    String mode = "left";
+
+    Dialog fontSettingDialog;
+
+    int fontSizeValue = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,49 +47,20 @@ public class MainActivity extends AppCompatActivity {
 
         menu = findViewById(R.id.menuLayout);
         menuBtn = (ImageButton) findViewById(R.id.menuBtn);
+        lostThingBtn = (Button) findViewById(R.id.lostThingBtn);
+        fontBtn = (Button) findViewById(R.id.fontBtn);
+        handModeBtn = (Button) findViewById(R.id.handModeBtn);
+        themeBtn = (Button) findViewById(R.id.themeBtn);
+        searchBtn = (ImageButton) findViewById(R.id.searchBtn);
+        navigationBtn = (ImageButton) findViewById(R.id.navigationBtn);
 
-        metro_map =findViewById(R.id.metro_map);
-    }
-
-    public boolean onTouchEvent(MotionEvent event){
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
-            x = event.getX();
-            y = event.getY();
-
-            Log.v("x", "" + x);
-            Log.v("y", "" + y);
-
-            Log.v("metro_x", "" + metro_map.getX());
-            Log.v("metro_y", "" + metro_map.getY());
-        }
-        if(event.getAction() == MotionEvent.ACTION_MOVE){
-            dx = event.getX() - x;
-            dy = event.getY() - y;
-
-            if(metro_map.getX()+dx >= 0 && metro_map.getX() <= 1000){
-                metro_map.setX(metro_map.getX()+dx);
-                metro_map.setY(metro_map.getY()+dy);
-                x = event.getX();
-                y = event.getY();
-            }
-            else if(metro_map.getX()+dx >= 1000){
-                metro_map.setX(1000);
-                metro_map.setY(metro_map.getY()+dy);
-                x = event.getX();
-                y = event.getY();
-            }
-            else{
-                metro_map.setX(0);
-                metro_map.setY(metro_map.getY()+dy);
-                x = event.getX();
-                y = event.getY();
-            }
-        }
-
-        return super.onTouchEvent(event);
+        fontSettingDialog = new Dialog(this);
+        fontSettingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        fontSettingDialog.setContentView(R.layout.font_setting_dialog);
     }
 
     public void onClick(View view) {
+        //menuBtn
         if(view.getId() == R.id.menuBtn){
             if(menu.getVisibility() == View.VISIBLE){
                 menu.setVisibility(View.INVISIBLE);
@@ -84,5 +69,77 @@ public class MainActivity extends AppCompatActivity {
                 menu.setVisibility(View.VISIBLE);
             }
         }
+        
+        //lost and find thing
+        if(view.getId() == R.id.lostThingBtn){
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("https://www.lost112.go.kr/lost/lostList.do"));
+            startActivity(intent);
+        }
+
+        //change fontSize button
+        if(view.getId() == R.id.fontBtn){
+            showFontSettingDialog(fontSizeValue);
+        }
+
+        //change rightHand or leftHand mode
+        if(view.getId() == R.id.handModeBtn){
+            if(mode.equals("left")){
+                handModeBtn.setText("오른손 모드");
+                mode = "right";
+            }
+            else{
+                handModeBtn.setText("왼손 모드");
+                mode = "left";
+            }
+        }
+
+        //change DayTheme or DarkTheme
+        if(view.getId() == R.id.themeBtn){
+
+        }
+    }
+
+    private void showFontSettingDialog(int value) {
+        fontSettingDialog.show();
+        TextView fontTest =(TextView) fontSettingDialog.findViewById(R.id.fontSize);
+        Button setBtn = (Button) fontSettingDialog.findViewById(R.id.setBtn);
+        Button cancelBtn = (Button) fontSettingDialog.findViewById(R.id.cancelBtn);
+        SeekBar seekBar = (SeekBar) fontSettingDialog.findViewById(R.id.seekBar);
+
+        seekBar.setProgress(value-10);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                Log.v("?", "" + seekBar.getProgress());
+                fontTest.setTextSize(seekBar.getProgress()+10);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        setBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fontSizeValue = seekBar.getProgress() + 10;
+                fontSettingDialog.dismiss();
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fontSettingDialog.dismiss();
+            }
+        });
     }
 }
