@@ -1,6 +1,7 @@
 package com.example.beaconproject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -12,7 +13,14 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstance);
         setContentView(R.layout.splash);
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        SharedPreferences preferces = getSharedPreferences("Setting", 0);
+
+        if(preferces.getString("theme", "Day").equals("Day")){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
 
         Handler hd = new Handler();
         hd.postDelayed(new SplashHandler(), 2000);
