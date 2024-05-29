@@ -7,5 +7,5 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="Theme.BeaconProject" parent="Base.Theme.BeaconProject" />
+    <style name="Theme.BeaconProject" parent="Base.Theme.BeaconProject"/>
 </resources>

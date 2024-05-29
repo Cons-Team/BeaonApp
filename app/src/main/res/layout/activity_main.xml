@@ -7,35 +7,14 @@
     android:backgroundTint="#000000"
     tools:context=".MainActivity">
 
-    <ScrollView
-        android:id="@+id/scrollView1"
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/metro_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <HorizontalScrollView
-            android:id="@+id/scrollview2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            app:layout_constraintBottom_toBottomOf="@+id/scrollView1"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView1"
-            app:layout_constraintStart_toStartOf="@+id/scrollView1"
-            app:layout_constraintTop_toTopOf="@+id/scrollView1">
-
-            <ImageView
-                android:id="@+id/metro_map"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/seoul_metro" />
-        </HorizontalScrollView>
-    </ScrollView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="300dp"
@@ -61,7 +40,6 @@
             android:id="@+id/searchBtn"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:backgroundTint="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/searchText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/searchText"
@@ -81,7 +59,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+            android:id="@+id/profileLayout"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="#6A72FF"
@@ -108,14 +86,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-            android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/lost_property_day"
             android:onClick="onClick"
             android:text="유실물"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/profileLayout" />
 
         <TextView
             android:id="@+id/setting"
@@ -133,11 +109,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/font_day"
             android:onClick="onClick"
             android:text="폰트 변경"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/setting" />
@@ -147,11 +121,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/left_mode_day"
             android:onClick="onClick"
             android:text="왼손모드"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fontBtn" />
@@ -161,11 +133,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/white"
             android:drawableLeft="@drawable/day_mode"
             android:onClick="onClick"
             android:text="야간모드"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/handModeBtn" />
@@ -178,22 +148,44 @@
         android:layout_height="45dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@color/white"
         android:onClick="onClick"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/menu_image" />
 
     <ImageButton
-        android:id="@+id/navigationBtn"
+        android:id="@+id/navigationBtnRight"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
         android:backgroundTint="#6A72FE"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/navigation_btn" />
+
+    <ImageButton
+        android:id="@+id/navigationBtnLeft"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#6A72FE"
+        android:visibility="gone"
+        android:onClick="onClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/navigation_btn" />
+
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="70dp"
+        tools:layout_editor_absoluteY="256dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

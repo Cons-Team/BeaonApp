@@ -41,4 +41,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     //Add library
+    implementation(libs.subsampling.scale.image.view)
 }

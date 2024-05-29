@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -22,6 +26,10 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,17 +40,24 @@ public class MainActivity extends AppCompatActivity {
     Button handModeBtn;
     Button themeBtn;
     ImageButton searchBtn;
-    ImageButton navigationBtn;
+    ImageButton[] navigationBtn;
+
+    Button testBtn;
 
     EditText searchText;
 
     Dialog fontSettingDialog;
 
     SharedPreferences preferces;
+    ConstraintLayout profileLayout;
 
     int fontSizeValue;
     String handValue;
     String themeValue;
+
+    SubsamplingScaleImageView metro_map;
+    Bitmap bitmap;
+    Bitmap resized;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +74,54 @@ public class MainActivity extends AppCompatActivity {
         handModeBtn = (Button) findViewById(R.id.handModeBtn);
         themeBtn = (Button) findViewById(R.id.themeBtn);
         searchBtn = (ImageButton) findViewById(R.id.searchBtn);
-        navigationBtn = (ImageButton) findViewById(R.id.navigationBtn);
+        navigationBtn = new ImageButton[]{
+                (ImageButton) findViewById(R.id.navigationBtnRight),
+                (ImageButton) findViewById(R.id.navigationBtnLeft)};
+
+        Button testBtn = (Button) findViewById(R.id.testButton);
 
         fontSettingDialog = new Dialog(this);
         fontSettingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         fontSettingDialog.setContentView(R.layout.font_setting_dialog);
+
+        Resources res = getResources();
+        bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.metro_map);
+        resized = Bitmap.createScaledBitmap(bitmap, 5000, 5000, true);
+        metro_map = (SubsamplingScaleImageView) findViewById(R.id.metro_map);
+        metro_map.setImage(ImageSource.bitmap(resized));
+
+        int x = resized.getHeight();
+        int y = resized.getWidth();
+        Log.v("size", "size : "+ x + "," + y);
+
+        int x2 = metro_map.getSHeight();
+        int y2 = metro_map.getSWidth();
+        Log.v("size", "size : "+ x2 + "," + y2);
+
+        metro_map.setMinScale(1.0f);
+        metro_map.setMaxScale(2.0f);
+
+        metro_map.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    PointF sCoord  =  metro_map.viewToSourceCoord(event.getX(),  event.getY());
+                    int  x_cor  =  (int)  sCoord.x;
+                    int  y_cor  =  (int)  sCoord.y;
+                    Log.v("location", "x : " + x_cor + ", y : " + y_cor );
+                    float scaleValue = metro_map.getScale();
+
+                    Log.v("scale", "scale : " + scaleValue);
+
+//                    testBtn.setVisibility(View.VISIBLE);
+//                    testBtn.setX(event.getX());
+//                    testBtn.setY(event.getY());
+                }
+
+                return false;
+            }
+        });
     }
 
     public void onStart() {
@@ -73,47 +131,64 @@ public class MainActivity extends AppCompatActivity {
         handValue = preferces.getString("handMode", "right");
         themeValue = preferces.getString("theme", "Day");
 
+        profileLayout = (ConstraintLayout) findViewById(R.id.profileLayout);
+        profileLayout.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#6A72FF")));
+
         if(handValue.equals("right")){
             handModeBtn.setText("왼손모드");
+
+            navigationBtn[1].setVisibility(View.INVISIBLE);
+            navigationBtn[0].setVisibility(View.VISIBLE);
         }
         else {
             handModeBtn.setText("오른손모드");
+
+            navigationBtn[0].setVisibility(View.INVISIBLE);
+            navigationBtn[1].setVisibility(View.VISIBLE);
         }
 
         if(themeValue.equals("Day")){
-            menuBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            Drawable[] imgs = {this.getResources().getDrawable(R.drawable.lost_property_day, null),
+                    this.getResources().getDrawable(R.drawable.font_day, null),
+                    this.getResources().getDrawable(R.drawable.day_mode, null)};
 
-            lostThingBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            lostThingBtn.setTextColor(Color.parseColor("#000000"));
+            Button[] buttons = {lostThingBtn, fontBtn, themeBtn};
+            for(int i = 0; i < imgs.length; i++){
+                imgs[i].setBounds(0, 0, 60, 60);
+                buttons[i].setCompoundDrawables(imgs[i], null, null, null);
+            }
 
-            fontBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            fontBtn.setTextColor(Color.parseColor("#000000"));
-
-            handModeBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            handModeBtn.setTextColor(Color.parseColor("#000000"));
-
-            themeBtn.setText("야간모드");
-            themeBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-            themeBtn.setTextColor(Color.parseColor("#000000"));
+            Drawable handImg;
+            if(handValue.equals("right")){
+                handImg = this.getResources().getDrawable(R.drawable.left_mode_day, null);
+            }
+            else{
+                handImg = this.getResources().getDrawable(R.drawable.right_mode_day, null);
+            }
+            handImg.setBounds(0, 0, 60, 60);
+            handModeBtn.setCompoundDrawables(handImg, null, null, null);
         }
         else{
-            menuBtn.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
+            Drawable[] imgs = {this.getResources().getDrawable(R.drawable.lost_property_night, null),
+                    this.getResources().getDrawable(R.drawable.font_night, null),
+                    this.getResources().getDrawable(R.drawable.dark_mode, null)};
 
-            lostThingBtn.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-            lostThingBtn.setTextColor(Color.parseColor("#ffffff"));
+            Button[] buttons = {lostThingBtn, fontBtn, themeBtn};
+            for(int i = 0; i < imgs.length; i++){
+                imgs[i].setBounds(0, 0, 60, 60);
+                buttons[i].setCompoundDrawables(imgs[i], null, null, null);
+            }
 
-            fontBtn.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-            fontBtn.setTextColor(Color.parseColor("#ffffff"));
-
-            handModeBtn.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-            handModeBtn.setTextColor(Color.parseColor("#ffffff"));
-
-            themeBtn.setText("주간모드");
-            themeBtn.setBackgroundTintList(ColorStateList.valueOf(Color.BLACK));
-            themeBtn.setTextColor(Color.parseColor("#ffffff"));
+            Drawable handImg;
+            if(handValue.equals("right")){
+                handImg = this.getResources().getDrawable(R.drawable.left_mode_night, null);
+            }
+            else{
+                handImg = this.getResources().getDrawable(R.drawable.right_mode_night, null);
+            }
+            handImg.setBounds(0, 0, 60, 60);
+            handModeBtn.setCompoundDrawables(handImg, null, null, null);
         }
-
-
     }
 
     public void onClick(View view) {
@@ -146,12 +221,36 @@ public class MainActivity extends AppCompatActivity {
             if(handValue.equals("right")){
                 handModeBtn.setText("오른손 모드");
                 handValue = "left";
-//                handModeBtn.setCompoundDrawables(img, null, null, null);
+
+                navigationBtn[0].setVisibility(View.INVISIBLE);
+                navigationBtn[1].setVisibility(View.VISIBLE);
+
+                Drawable handImg;
+                if(themeValue.equals("Day")){
+                    handImg = this.getResources().getDrawable(R.drawable.right_mode_day, null);
+                }
+                else{
+                    handImg = this.getResources().getDrawable(R.drawable.right_mode_night, null);
+                }
+                handImg.setBounds(0, 0, 60, 60);
+                handModeBtn.setCompoundDrawables(handImg, null, null, null);
             }
             else{
                 handModeBtn.setText("왼손 모드");
                 handValue = "right";
-//                handModeBtn.setCompoundDrawables(img, null, null, null);
+
+                navigationBtn[1].setVisibility(View.INVISIBLE);
+                navigationBtn[0].setVisibility(View.VISIBLE);
+
+                Drawable handImg;
+                if(themeValue.equals("Day")){
+                    handImg = this.getResources().getDrawable(R.drawable.left_mode_day, null);
+                }
+                else{
+                    handImg = this.getResources().getDrawable(R.drawable.left_mode_night, null);
+                }
+                handImg.setBounds(0, 0, 60, 60);
+                handModeBtn.setCompoundDrawables(handImg, null, null, null);
             }
             editor.putString("handMode", handValue);
             editor.commit();
@@ -176,6 +275,11 @@ public class MainActivity extends AppCompatActivity {
             Intent mainIntent = Intent.makeRestartActivityTask(componentName);
             this.startActivity(mainIntent);
             System.exit(0);
+        }
+
+        //Navigation Button - Unity
+        if(view.getId() == R.id.navigationBtnRight || view.getId() == R.id.navigationBtnLeft){
+
         }
     }
 
