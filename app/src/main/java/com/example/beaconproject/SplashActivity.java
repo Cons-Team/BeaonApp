@@ -2,11 +2,19 @@ package com.example.beaconproject;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance){
@@ -15,12 +23,20 @@ public class SplashActivity extends AppCompatActivity {
 
         SharedPreferences preferces = getSharedPreferences("Setting", 0);
 
+        Resources res = getResources();
+        BitmapDrawable bitmap;
+        ImageView splashImage = (ImageView) findViewById(R.id.splashImage);
+
         if(preferces.getString("theme", "Day").equals("Day")){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.splashimage, null);
         }
         else{
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            bitmap = (BitmapDrawable) res.getDrawable(R.drawable.splashimage_night, null);
         }
+
+        splashImage.setImageDrawable(bitmap);
 
         Handler hd = new Handler();
         hd.postDelayed(new SplashHandler(), 2000);
